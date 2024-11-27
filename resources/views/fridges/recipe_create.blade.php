@@ -11,13 +11,6 @@
         <h1>レシピを作成する</h1>
         <form action="{{ route('recipe.store') }}" method="POST">
             @csrf
-            <input type="hidden" name="recipe_id" value="{{ $recipe_id }}"> <!-- 空のレシピIDを作成 -->
-
-            <input type="hidden" name="contents[]">
-            <input type="hidden" name="seasonings[]">
-            <input type="hidden" name="quantities[]">
-            <input type="hidden" name="seasoning_quantities[]">
-
             <div class="form-group">
                 <label for="recipe_name">レシピ名:</label>
                 <input type="text" class="form-control" id="recipe_name" name="recipe[recipe_name]" required>
@@ -70,6 +63,16 @@
         <div class="footer">
             <a href="/mypage/recipe_list">戻る</a>
         </div>
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <script>
             $(document).ready(function() {
