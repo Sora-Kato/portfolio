@@ -103,6 +103,7 @@
                     if (seasoningId && seasoningQuantity) {
                         addedSeasonings.push({ seasoningId: seasoningId, seasoningName: seasoningName, seasoningQuantity: seasoningQuantity });
                         updateSeasoningList();
+                        updateRequiredAttributes(); // 調味料追加後にrequiredを更新
                         $('#seasonings').val('');
                         $('#seasoning-quantity').val('');
                     } else {
@@ -150,16 +151,20 @@
                 function updateRequiredAttributes() {
                     // 食材が追加されていない場合はrequiredを設定
                     if (addedContents.length > 0) {
-                        $('#contents').removeAttr('required');
+                        $('#contents').removeAttr('required'); // 食材があるときはrequiredを外す
+                        $('#quantity').removeAttr('required'); // 食材分量があるときはrequiredを外す
                     } else {
-                        $('#contents').attr('required', true);
+                        $('#contents').attr('required', true); // 食材がないときはrequiredを設定
+                        $('#quantity').attr('required', true); // 食材分量がないときはrequiredを設定
                     }
 
                     // 調味料が追加されていない場合はrequiredを設定
                     if (addedSeasonings.length > 0) {
-                        $('#seasonings').removeAttr('required');
+                        $('#seasonings').removeAttr('required'); // 調味料があるときはrequiredを外す
+                        $('#seasoning-quantity').removeAttr('required'); // 調味料分量があるときはrequiredを外す
                     } else {
-                        $('#seasonings').attr('required', true);
+                        $('#seasonings').attr('required', true); // 調味料がないときはrequiredを設定
+                        $('#seasoning-quantity').attr('required', true); // 調味料分量がないときはrequiredを設定
                     }
                 }
 
