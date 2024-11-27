@@ -13,11 +13,13 @@ class Recipe extends Model
 
     public function contents()
     {
-        return $this->belongsToMany(Content::class, 'content_recipe');
+        return $this->belongsToMany(Content::class, 'content_recipe')
+                    ->withPivot('quantity'); // 中間テーブルのquantityカラムを取得可能にする
     }
 
     public function seasonings()
     {
-        return $this->belongsToMany(Content::class, 'seasoning_recipe');
+        return $this->belongsToMany(Seasoning::class, 'seasoning_recipe')
+                    ->withPivot('quantity'); // 中間テーブルの quantity カラムを取得可能にする;
     }
 }
