@@ -58,6 +58,16 @@
                 <textarea class="form-control" id="recipe_step" name="recipe[recipe_step]" rows="5" required></textarea>
             </div>
 
+            <div class="form-group">
+                <label for="allergies">アレルギー:</label>
+                <select id="allergies" name="allergies[]" class="form-control" multiple>
+                    <option value="">選択してください</option>
+                    @foreach ($allergies as $allergy)
+                        <option value="{{ $allergy->allergy_id }}">{{ $allergy->allergy_name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
             <button type="submit" class="btn btn-primary">レシピを登録</button>
             </form>
         <div class="footer">

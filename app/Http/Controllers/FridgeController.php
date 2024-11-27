@@ -7,6 +7,7 @@ use App\Models\Content;
 use App\Models\Seasoning;
 use App\Models\MySeasoning;
 use App\Models\Recipe;
+use App\Models\Allergy;
 use Illuminate\Http\Request;
 
 class FridgeController extends Controller
@@ -88,9 +89,10 @@ class FridgeController extends Controller
         // 空のレシピを作成せず、ビューに材料と調味料のデータを渡すだけ
         $contents = Content::all();
         $seasonings = Seasoning::all(); 
+        $allergies = Allergy::all(); 
         
         // レシピIDをビューに渡さないようにする（保存するタイミングで生成する）
-        return view('fridges.recipe_create', compact('contents','seasonings'));
+        return view('fridges.recipe_create', compact('contents','seasonings','allergies'));
     }
 
     public function recipe_store(Request $request)
@@ -106,6 +108,8 @@ class FridgeController extends Controller
             'seasonings.*' => 'integer|exists:seasonings,seasoning_id',
             'seasoning_quantities' => 'required|array|size:' . count($request->input('seasonings', [])),
             'seasoning_quantities.*' => 'required|string',
+            'allergies' => 'nullable|array',
+            'allergies.*' => 'integer|exists:allergies,allergy_id',
         ]);
 
         // バリデーション後にレシピをデータベースに保存
@@ -126,9 +130,30 @@ class FridgeController extends Controller
                 'quantity' => $request->input('seasoning_quantities')[$index]
             ]);
         }
+        
+        // アレルギーとの関連を保存
+        if ($request->has('allergies')) {
+            foreach ($request->input('allergies') as $allergyId) {
+                $recipe->allergies()->attach($allergyId);
+            }
+        }
 
         return redirect()->route('recipe.create')
                          ->with('success', 'レシピが正常に保存されました！');
+    }
+
+    public function searchRecipes()
+    {
+        // 冷蔵庫の中身（登録されている食材）を取得
+        $fridgeContentIds = Fridge::pluck('fridge_id')->toArray();
+
+        // 冷蔵庫の中身に関連するレシピを検索
+        $recipes = Recipe::whereHas('contents', function ($query) use ($fridgeContentIds) {
+            $query->whereIn('content_recipe.content_id', $fridgeContentIds); // 冷蔵庫の食材と一致するcontent_idを検索
+        })->get();
+
+        // レシピをビューに渡す
+        return view('fridges.recipe_search', compact('recipes'));
     }
 
 }
