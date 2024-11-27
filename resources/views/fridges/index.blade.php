@@ -37,6 +37,12 @@
                 </ul>
                 <button type="submit">削除</button>
             </form>
+
+            <!-- レシピ検索フォーム -->
+            <form action="{{ route('recipe.search') }}" method="GET">
+                <button type="submit">冷蔵庫の食材でレシピを検索</button>
+            </form>
+
         </div>
         <a href="{{ route('fridge.indexSeasoning') }}">調味料管理</a>
         <div class="mypage">

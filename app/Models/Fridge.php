@@ -14,4 +14,10 @@ class Fridge extends Model
 
     protected $primaryKey = 'fridge_id'; // 主キーを明示的に指定
     public $incrementing = true; // 自動増分を使用する
+
+    public function content()
+    {
+        return $this->belongsTo(Content::class, 'fridge_content', 'content_id');
+    }
+
 }
