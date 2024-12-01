@@ -20,12 +20,12 @@ class Recipe extends Model
 
     public function seasonings()
     {
-        return $this->belongsToMany(Seasoning::class, 'seasoning_recipe')
+        return $this->belongsToMany(Seasoning::class, 'seasoning_recipe', 'recipe_id', 'seasoning_id')
                     ->withPivot('quantity'); // 中間テーブルの quantity カラムを取得可能にする;
     }
 
     public function allergies()
     {
-        return $this->belongsToMany(Allergy::class, 'recipe_allergy');
+        return $this->belongsToMany(Allergy::class, 'recipe_allergy', 'recipe_id', 'allergy_id');
     }
 }
