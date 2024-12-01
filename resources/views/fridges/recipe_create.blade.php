@@ -18,8 +18,8 @@
 
             <!-- 食材の選択 -->
             <div class="form-group">
-                <label for="contents">材料:</label>
-                <select id="contents" name="contents[]" class="form-control" required>
+                <label for="contents_list">材料:</label>
+                <select id="contents_list" name="contents_list[]" class="form-control" required>
                     <option value="">選択してください</option>
                     @foreach ($contents as $content)
                         <option value="{{ $content->content_id }}">{{ $content->name }}</option>
@@ -30,8 +30,8 @@
             </div>
 
             <div class="form-group"> 
-                <label for="seasonings">調味料:</label>
-                <select id="seasonings" name="seasonings[]" class="form-control" required>
+                <label for="seasonings_list">調味料:</label>
+                <select id="seasonings_list" name="seasonings_list[]" class="form-control" required>
                     <option value="">選択してください</option>
                     @foreach ($seasonings as $seasoning)
                         <option value="{{ $seasoning->seasoning_id }}">{{ $seasoning->seasoning_name }}</option>
@@ -44,13 +44,13 @@
             <!-- 追加された食材リスト -->
             <div id="added-contents">
                 <h3>追加した食材</h3>
-                <ul id="content-list"></ul>
+                <ul id="listContent"></ul>
             </div>
             
             <!-- 追加された調味料リスト -->
             <div id="added-seasonings">
                 <h3>追加した調味料</h3>
-                <ul id="seasoning-list"></ul>
+                <ul id="listSeasoning"></ul>
             </div>
 
             <div class="form-group">
@@ -69,6 +69,12 @@
             </div>
 
             <button type="submit" class="btn btn-primary">レシピを登録</button>
+
+            <input type="hidden" id="contents" name="contents[]" value="">
+            <input type="hidden" id="seasonings" name="seasonings[]" value="">
+            <input type="hidden" id="quantities" name="quantities[]" value="">
+            <input type="hidden" id="seasoning_quantities" name="seasoning_quantities[]" value="">
+
             </form>
         <div class="footer">
             <a href="/mypage/recipe_list">戻る</a>
@@ -92,33 +98,38 @@
                 let addedSeasonings = [];
 
                 // 食材を追加するボタンのクリックイベント
-                $('#add-content').click(function() {
-                    let contentId = $('#contents').val();
+                $('#add-content').click(function() { // #add-contentはボタンに紐づく
+                    let contentId = $('#contents_list').val();
                     let quantity = $('#quantity').val();
-                    let contentName = $('#contents option:selected').text();
+                    let contentName = $('#contents_list option:selected').text();
 
                     if (contentId && quantity) {
                         addedContents.push({ contentId: contentId, contentName: contentName, quantity: quantity });
                         updateContentList();
-                        $('#contents').val('');
+                        $('#contents_list').val('');
                         $('#quantity').val('');
+                        $('input[name="contents[]"]').val(contentId);
+                        $('input[name="quantities[]"]').val(quantity);
                     } else {
                         alert('食材と分量を選択してください');
                     }
+
                 });
 
                 // 調味料を追加するボタンのクリックイベント
                 $('#add-seasoning').click(function() {
-                    let seasoningId = $('#seasonings').val();
+                    let seasoningId = $('#seasonings_list').val();
                     let seasoningQuantity = $('#seasoning-quantity').val();
-                    let seasoningName = $('#seasonings option:selected').text();
+                    let seasoningName = $('#seasonings_list option:selected').text();
 
                     if (seasoningId && seasoningQuantity) {
                         addedSeasonings.push({ seasoningId: seasoningId, seasoningName: seasoningName, seasoningQuantity: seasoningQuantity });
                         updateSeasoningList();
                         updateRequiredAttributes(); // 調味料追加後にrequiredを更新
-                        $('#seasonings').val('');
+                        $('#seasonings_list').val('');
                         $('#seasoning-quantity').val('');
+                        $('input[name="seasonings[]"]').val(seasoningId);
+                        $('input[name="seasoning_quantities[]"]').val(seasoningQuantity);
                     } else {
                         alert('調味料と分量を選択してください');
                     }
@@ -126,9 +137,9 @@
 
                 // 食材リストの更新
                 function updateContentList() {
-                    $('#content-list').empty();
+                    $('#listContent').empty();
                     addedContents.forEach(function(content, index) {
-                        $('#content-list').append(
+                        $('#listContent').append(
                             `<li>${content.contentName} - ${content.quantity} <button type="button" class="remove-btn" data-index="${index}" data-type="content">削除</button></li>`
                         );
                     });
@@ -136,16 +147,16 @@
 
                 // 調味料リストの更新
                 function updateSeasoningList() {
-                    $('#seasoning-list').empty();
+                    $('#listSeasoning').empty();
                     addedSeasonings.forEach(function(seasoning, index) {
-                        $('#seasoning-list').append(
+                        $('#listSeasoning').append(
                             `<li>${seasoning.seasoningName} - ${seasoning.seasoningQuantity} <button type="button" class="remove-btn" data-index="${index}" data-type="seasoning">削除</button></li>`
                         );
                     });
                 }
 
                 // 食材または調味料リストから削除
-                $('#content-list, #seasoning-list').on('click', '.remove-btn', function() {
+                $('#listContent, #listSeasoning').on('click', '.remove-btn', function() {
                     let index = $(this).data('index');
                     let type = $(this).data('type');
 
@@ -164,19 +175,19 @@
                 function updateRequiredAttributes() {
                     // 食材が追加されていない場合はrequiredを設定
                     if (addedContents.length > 0) {
-                        $('#contents').removeAttr('required'); // 食材があるときはrequiredを外す
+                        $('#contents_list').removeAttr('required'); // 食材があるときはrequiredを外す
                         $('#quantity').removeAttr('required'); // 食材分量があるときはrequiredを外す
                     } else {
-                        $('#contents').attr('required', true); // 食材がないときはrequiredを設定
+                        $('#contents_list').attr('required', true); // 食材がないときはrequiredを設定
                         $('#quantity').attr('required', true); // 食材分量がないときはrequiredを設定
                     }
 
                     // 調味料が追加されていない場合はrequiredを設定
                     if (addedSeasonings.length > 0) {
-                        $('#seasonings').removeAttr('required'); // 調味料があるときはrequiredを外す
+                        $('#seasonings_list').removeAttr('required'); // 調味料があるときはrequiredを外す
                         $('#seasoning-quantity').removeAttr('required'); // 調味料分量があるときはrequiredを外す
                     } else {
-                        $('#seasonings').attr('required', true); // 調味料がないときはrequiredを設定
+                        $('#seasonings_list').attr('required', true); // 調味料がないときはrequiredを設定
                         $('#seasoning-quantity').attr('required', true); // 調味料分量がないときはrequiredを設定
                     }
                 }
@@ -200,11 +211,6 @@
                         seasoningQuantities.push(item.seasoningQuantity);
                     });
 
-                    // hiddenフィールドに値を設定
-                    $('input[name="contents[]"]').val(contentIds.join(','));
-                    $('input[name="seasonings[]"]').val(seasoningIds.join(','));
-                    $('input[name="quantities[]"]').val(quantities.join(','));
-                    $('input[name="seasoning_quantities[]"]').val(seasoningQuantities.join(','));
                 });
             });
         </script>

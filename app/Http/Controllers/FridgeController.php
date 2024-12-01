@@ -8,6 +8,7 @@ use App\Models\Seasoning;
 use App\Models\MySeasoning;
 use App\Models\Recipe;
 use App\Models\Allergy;
+use App\Models\SeasoningRecipe;
 use Illuminate\Http\Request;
 
 class FridgeController extends Controller
@@ -128,7 +129,7 @@ class FridgeController extends Controller
             // 中間テーブルのモデルを使って、quantityを保存
             $recipe->seasonings()->attach($seasoningId, [
                 'quantity' => $request->input('seasoning_quantities')[$index]
-            ]);
+            ]); 
         }
         
         // アレルギーとの関連を保存
@@ -154,6 +155,19 @@ class FridgeController extends Controller
 
         // レシピをビューに渡す
         return view('fridges.recipe_search', compact('recipes'));
+    }
+
+    public function show($id)
+    {
+        //　指定されたレシピの取得（Content、Seasoningも一緒に）
+        $recipe = Recipe::with(['contents', 'seasonings'])->findOrFail($id);
+
+        // リレーションで食材と調味料も取得
+        $contents = $recipe->contents;
+        $seasonings = $recipe->seasonings;
+
+        // ビューにデータを渡す
+        return view('fridges.recipe_show', compact('recipe', 'contents', 'seasonings'));
     }
 
 }
