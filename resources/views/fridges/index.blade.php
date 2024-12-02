@@ -41,12 +41,18 @@
             <!-- レシピ検索フォーム -->
             <form action="{{ route('recipe.search') }}" method="GET">
                 <label for="allergies">アレルギーを選択:</label><br/>
+                
+                @isset($allergies)
                 <select id="allergies" name="allergy_ids[]" multiple>
                     <option value="">アレルギーを選んでください</option>
                     @foreach($allergies as $allergy)
                         <option value="{{ $allergy->allergy_id }}">{{ $allergy->allergy_name }}</option>
                     @endforeach
                 </select>
+                @else
+                    <p>アレルギー情報がありません</p>
+                @endisset
+
                 <button type="submit">冷蔵庫の食材でレシピを検索</button>
             </form>
 

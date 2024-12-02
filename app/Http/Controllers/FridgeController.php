@@ -143,18 +143,34 @@ class FridgeController extends Controller
                          ->with('success', 'レシピが正常に保存されました！');
     }
 
-    public function searchRecipes()
+    public function searchRecipes(Request $request)
     {
         // 冷蔵庫の中身（登録されている食材）を取得
         $fridgeContentIds = Fridge::pluck('fridge_id')->toArray();
 
+        // アレルギーのリストを取得（アレルギーのモデルから）
+        $allergies = Allergy::all();
+
+        // ここで確認
+        dd($allergies);  // アレルギーが正しく取得できているか確認
+
+        // アレルギーのIDを取得（選択されたアレルギー）
+        $allergyIds = $request->input('allergy_ids', []);
+
         // 冷蔵庫の中身に関連するレシピを検索
         $recipes = Recipe::whereHas('contents', function ($query) use ($fridgeContentIds) {
             $query->whereIn('content_recipe.content_id', $fridgeContentIds); // 冷蔵庫の食材と一致するcontent_idを検索
-        })->get();
+        })
+        ->whereDoesntHave('allergies', function ($query) use ($allergyIds) {
+            // アレルギーが選択されていれば、そのアレルギーを含まないレシピを取得
+            if (!empty($allergyIds)) {
+                $query->whereIn('allergies.allergy_id', $allergyIds);
+            }
+        })
+        ->get();
 
         // レシピをビューに渡す
-        return view('fridges.recipe_search', compact('recipes'));
+        return view('fridges.recipe_search', compact('recipes','allergies'));
     }
 
     public function show($id)
