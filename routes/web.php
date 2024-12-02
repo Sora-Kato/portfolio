@@ -23,5 +23,7 @@ Route::get('/search', [FridgeController::class, 'searchRecipes'])->name('recipe.
 Route::get('/search/recipe_show/{id}', [FridgeController::class, 'show'])->name('recipe.show');
 Route::get('/mypage', [FridgeController::class, 'mypage'])->name('fridge.mypage');
 Route::get('/mypage/recipe_list', [FridgeController::class, 'recipe_list'])->name('recipe.list');
+Route::get('/mypage/recipe_list/{id}/edit', [FridgeController::class, 'edit'])->name('recipe.edit');
+Route::put('/mypage/recipe_list/{id}', [FridgeController::class, 'update'])->name('recipe.update');
 Route::get('/mypage/recipe_list/recipe_create', [FridgeController::class, 'recipe_create'])->name('recipe.create');
 Route::post('/mypage/recipe_list/recipe_create', [FridgeController::class, 'recipe_store'])->name('recipe.store');

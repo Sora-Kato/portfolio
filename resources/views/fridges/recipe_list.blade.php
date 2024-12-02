@@ -12,7 +12,10 @@
         <div class="myRecipe">
             <ul>
                 @foreach($recipes as $recipe)
-                    <li>{{ $recipe->recipe_name }} - 作成日： {{ $recipe->created_at->format('Y-m-d') }}</li>
+                    <li>
+                        <a href="{{ route('recipe.edit', ['id' => $recipe->recipe_id]) }}">{{ $recipe->recipe_name }}</a>
+                        - 作成日： {{ $recipe->created_at->format('Y-m-d') }}
+                    </li>
                 @endforeach
             </ul>
         </div>

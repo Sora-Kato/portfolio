@@ -170,4 +170,37 @@ class FridgeController extends Controller
         return view('fridges.recipe_show', compact('recipe', 'contents', 'seasonings'));
     }
 
+    public function edit($id)
+    {
+        $recipe = Recipe::findOrFail($id);
+        $contents = Content::all();  // 食材リスト
+        $seasonings = Seasoning::all();  // 調味料リスト
+        $allergies = Allergy::all();  // アレルギーリスト
+
+        // 編集用に必要なデータをビューに渡す
+        return view('fridges.recipe_edit', compact('recipe', 'contents', 'seasonings', 'allergies'));
+    }
+
+        public function update(Request $request, $id)
+    {
+        $request->validate([
+            'recipe.recipe_name' => 'required',
+            'recipe.recipe_step' => 'required',
+            'contents_list' => 'required|array',
+            'seasonings_list' => 'required|array',
+        ]);
+
+        $recipe = Recipe::findOrFail($id);
+        $recipe->update([
+            'recipe_name' => $request->input('recipe.recipe_name'),
+            'recipe_step' => $request->input('recipe.recipe_step'),
+        ]);
+
+        // 食材と調味料の更新
+        $recipe->contents()->sync($request->input('contents_list'));
+        $recipe->seasonings()->sync($request->input('seasonings_list'));
+
+        return redirect()->route('recipe.list')->with('success', 'レシピが更新されました');
+    }
+
 }

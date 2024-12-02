@@ -11,7 +11,7 @@
         <h2>{{ $recipe->recipe_name }}</h2>
         <p>作成日：{{ $recipe->created_at->format('Y-m-d') }}</p>
         <h3>作り方</h3>
-        <p>{{ $recipe->recipe_step }}</p>
+        <p>{!! nl2br(e($recipe->recipe_step)) !!}</p>
 
         <h3>材料</h3>
         @if($contents->isEmpty())
