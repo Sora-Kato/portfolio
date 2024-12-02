@@ -9,7 +9,7 @@
     </head>
     <body>
         <h1>レシピを作成する</h1>
-        <form action="{{ route('recipe.store') }}" method="POST">
+        <form action="{{ route('recipe.store') }}" method="POST" id="create">
             @csrf
             <div class="form-group">
                 <label for="recipe_name">レシピ名:</label>
@@ -70,10 +70,10 @@
 
             <button type="submit" class="btn btn-primary">レシピを登録</button>
 
-            <input type="hidden" id="contents" name="contents[]" value="">
-            <input type="hidden" id="seasonings" name="seasonings[]" value="">
-            <input type="hidden" id="quantities" name="quantities[]" value="">
-            <input type="hidden" id="seasoning_quantities" name="seasoning_quantities[]" value="">
+            <!--<input type="hidden" id="contents" name="contents[]" value="">-->
+            <!--<input type="hidden" id="seasonings" name="seasonings[]" value="">-->
+            <!--<input type="hidden" id="quantities" name="quantities[]" value="">-->
+            <!--<input type="hidden" id="seasoning_quantities" name="seasoning_quantities[]" value="">-->
 
             </form>
         <div class="footer">
@@ -102,14 +102,34 @@
                     let contentId = $('#contents_list').val();
                     let quantity = $('#quantity').val();
                     let contentName = $('#contents_list option:selected').text();
+                    let last_contentId = $('input[name="contents[]"]').val();
+                    let last_quantity = $('input[name="quantities[]"]').val();
+                    let new_contentId = [];
+                    let new_quantity = [];
+                    new_contentId.push(contentId);
+                    new_contentId.push(last_contentId);
+                    new_quantity.push(quantity);
+                    new_quantity.push(last_quantity);
+                    const form = document.getElementById('create');
+                    const input = document.createElement('input');
+                    input.setAttribute('type', 'hidden');
+                    input.setAttribute('name', 'contents[]');
+                    input.setAttribute('value', contentId);
+                    form.appendChild(input);
+                    const inputContent = document.createElement('input');
+                    inputContent.setAttribute('type', 'hidden');
+                    inputContent.setAttribute('name', 'quantities[]');
+                    inputContent.setAttribute('value', quantity);
+                    form.appendChild(inputContent);
+                    
 
                     if (contentId && quantity) {
                         addedContents.push({ contentId: contentId, contentName: contentName, quantity: quantity });
                         updateContentList();
                         $('#contents_list').val('');
                         $('#quantity').val('');
-                        $('input[name="contents[]"]').val(contentId);
-                        $('input[name="quantities[]"]').val(quantity);
+                        // $('input[name="contents[]"]').val(new_contentId);
+                        // $('input[name="quantities[]"]').val(new_quantity);
                     } else {
                         alert('食材と分量を選択してください');
                     }
@@ -121,6 +141,25 @@
                     let seasoningId = $('#seasonings_list').val();
                     let seasoningQuantity = $('#seasoning-quantity').val();
                     let seasoningName = $('#seasonings_list option:selected').text();
+                    let last_seasoningId = $('input[name="seasonings[]"]').val();
+                    let last_seasoningQuantity = $('input[name="seasoning_quantities[]"]').val();
+                    let new_seasoningId = [];
+                    let new_seasoningQuantity = [];
+                    new_seasoningId.push(seasoningId);
+                    new_seasoningId.push(last_seasoningId);
+                    new_seasoningQuantity.push(seasoningQuantity);
+                    new_seasoningQuantity.push(last_seasoningQuantity);
+                    const form = document.getElementById('create');
+                    const input = document.createElement('input');
+                    input.setAttribute('type', 'hidden');
+                    input.setAttribute('name', 'seasonings[]');
+                    input.setAttribute('value', seasoningId);
+                    form.appendChild(input);
+                    const inputSeasoning = document.createElement('input');
+                    inputSeasoning.setAttribute('type', 'hidden');
+                    inputSeasoning.setAttribute('name', 'seasoning_quantities[]');
+                    inputSeasoning.setAttribute('value', seasoningQuantity);
+                    form.appendChild(inputSeasoning);
 
                     if (seasoningId && seasoningQuantity) {
                         addedSeasonings.push({ seasoningId: seasoningId, seasoningName: seasoningName, seasoningQuantity: seasoningQuantity });
@@ -128,8 +167,8 @@
                         updateRequiredAttributes(); // 調味料追加後にrequiredを更新
                         $('#seasonings_list').val('');
                         $('#seasoning-quantity').val('');
-                        $('input[name="seasonings[]"]').val(seasoningId);
-                        $('input[name="seasoning_quantities[]"]').val(seasoningQuantity);
+                        // $('input[name="seasonings[]"]').val(new_seasoningId);
+                        // $('input[name="seasoning_quantities[]"]').val(new_seasoningQuantity);
                     } else {
                         alert('調味料と分量を選択してください');
                     }
