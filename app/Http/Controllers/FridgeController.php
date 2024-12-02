@@ -102,11 +102,11 @@ class FridgeController extends Controller
             'recipe.recipe_name' => 'required|string|max:255',
             'recipe.recipe_step' => 'required|string',
             'contents' => 'required|array|min:1', // 必須で1つ以上の材料が必要
-            'contents.*' => 'integer|exists:contents,content_id',
+            'contents.*' => 'exists:contents,content_id',
             'quantities' => 'required|array|size:' . count($request->input('contents', [])), // contents数とquantities数の一致を確認
             'quantities.*' => 'required|string',
             'seasonings' => 'required|array|min:1', // 必須で1つ以上の調味料が必要
-            'seasonings.*' => 'integer|exists:seasonings,seasoning_id',
+            'seasonings.*' => 'exists:seasonings,seasoning_id',
             'seasoning_quantities' => 'required|array|size:' . count($request->input('seasonings', [])),
             'seasoning_quantities.*' => 'required|string',
             'allergies' => 'nullable|array',
