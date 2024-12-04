@@ -9,6 +9,7 @@ use App\Models\MySeasoning;
 use App\Models\Recipe;
 use App\Models\Allergy;
 use App\Models\SeasoningRecipe;
+use App\Models\ShopList;
 use Illuminate\Http\Request;
 
 class FridgeController extends Controller
@@ -151,9 +152,6 @@ class FridgeController extends Controller
         // アレルギーのリストを取得（アレルギーのモデルから）
         $allergies = Allergy::all();
 
-        // ここで確認
-        dd($allergies);  // アレルギーが正しく取得できているか確認
-
         // アレルギーのIDを取得（選択されたアレルギー）
         $allergyIds = $request->input('allergy_ids', []);
 
@@ -161,16 +159,10 @@ class FridgeController extends Controller
         $recipes = Recipe::whereHas('contents', function ($query) use ($fridgeContentIds) {
             $query->whereIn('content_recipe.content_id', $fridgeContentIds); // 冷蔵庫の食材と一致するcontent_idを検索
         })
-        ->whereDoesntHave('allergies', function ($query) use ($allergyIds) {
-            // アレルギーが選択されていれば、そのアレルギーを含まないレシピを取得
-            if (!empty($allergyIds)) {
-                $query->whereIn('allergies.allergy_id', $allergyIds);
-            }
-        })
         ->get();
 
         // レシピをビューに渡す
-        return view('fridges.recipe_search', compact('recipes','allergies'));
+        return view('fridges.recipe_search', compact('recipes'));
     }
 
     public function show($id)
@@ -217,6 +209,48 @@ class FridgeController extends Controller
         $recipe->seasonings()->sync($request->input('seasonings_list'));
 
         return redirect()->route('recipe.list')->with('success', 'レシピが更新されました');
+    }
+
+        public function addToShopList($recipeId)
+    {
+        // レシピの詳細を取得
+        $recipe = Recipe::with(['contents'])->findOrFail($recipeId);
+
+        // 冷蔵庫にない食材を取得
+        $fridgeContentIds = Fridge::pluck('fridge_id')->toArray();
+        $missingContents = $recipe->contents->filter(function ($content) use ($fridgeContentIds) {
+            return !in_array($content->content_id, $fridgeContentIds);
+        });
+
+        // 足りない食材を買い物リストに追加
+        foreach ($missingContents as $content) {
+            ShopList::create([
+                'item_name' => $content->name,
+                'quantity' => (string) $content->pivot->quantity,
+            ]);
+        }
+
+        return redirect()->route('shopList.show')
+                         ->with('success', '足りない材料が買い物リストに追加されました！');
+    }
+
+        public function showShopList()
+    {
+        $shopListItems = ShopList::all();
+        return view('fridges.shopList', compact('shopListItems'));
+    }
+
+        public function deleteFromShopList($id)
+    {
+        // 指定されたIDの買い物リストアイテムを取得
+        $item = ShopList::findOrFail($id);
+
+        // アイテムを削除
+        $item->delete();
+
+        // 削除後に買い物リスト画面へリダイレクト
+        return redirect()->route('shopList.show')
+                         ->with('success', 'アイテムが削除されました！');
     }
 
 }

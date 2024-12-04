@@ -58,6 +58,9 @@
 
         </div>
         <a href="{{ route('fridge.indexSeasoning') }}">調味料管理</a>
+        <div class="shopList">
+            <a href="{{ route('shopList.show') }}">買物リストを確認する</a>
+        </div>
         <div class="mypage">
             <a href="{{ route('fridge.mypage') }}">マイページ</a>
         </div>
