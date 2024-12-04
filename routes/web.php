@@ -27,3 +27,6 @@ Route::get('/mypage/recipe_list/{id}/edit', [FridgeController::class, 'edit'])->
 Route::put('/mypage/recipe_list/{id}', [FridgeController::class, 'update'])->name('recipe.update');
 Route::get('/mypage/recipe_list/recipe_create', [FridgeController::class, 'recipe_create'])->name('recipe.create');
 Route::post('/mypage/recipe_list/recipe_create', [FridgeController::class, 'recipe_store'])->name('recipe.store');
+Route::post('/shoplist/add/{id}', [FridgeController::class, 'addToShopList'])->name('shopList.add');
+Route::get('/shoplist', [FridgeController::class, 'showShopList'])->name('shopList.show');
+Route::delete('/shoplist/delete/{id}', [FridgeController::class, 'deleteFromShopList'])->name('shopList.delete');

@@ -37,6 +37,10 @@
 
         <div class="footer">
             <a href="{{ route('recipe.search') }}">検索結果に戻る</a>
+            <form action="{{ route('shopList.add', ['id' => $recipe->recipe_id]) }}" method="POST" style="display:inline;">
+                @csrf
+                <button type="submit">買い物リストに追加</button>
+            </form>
         </div>
     </body>
 </html>
