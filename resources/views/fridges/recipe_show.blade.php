@@ -4,7 +4,8 @@
         <meta charset="utf-8">
         <title>冷蔵庫活用アプリ</title>
         <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('css/show.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Kosugi&display=swap" rel="stylesheet">
     </head>
     <body>
         <h1>レシピ詳細</h1>
@@ -24,7 +25,7 @@
             </ul>
         @endif
 
-        <h3>必要な調味料</h3>
+        <h3>調味料</h3>
         @if($seasonings->isEmpty())
             <p>調味料の情報がありません。</p>
         @else
@@ -36,11 +37,11 @@
         @endif
 
         <div class="footer">
-            <a href="{{ route('recipe.search') }}">検索結果に戻る</a>
             <form action="{{ route('shopList.add', ['id' => $recipe->recipe_id]) }}" method="POST" style="display:inline;">
                 @csrf
                 <button type="submit">買い物リストに追加</button>
-            </form>
+            </form><br>
+            <a href="{{ route('recipe.search') }}">検索結果に戻る</a>
         </div>
     </body>
 </html>

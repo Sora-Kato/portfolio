@@ -1,0 +1,58 @@
+@charset "utf-8";
+
+* {
+    font-family: 'Noto Sans JP',sans-serif;
+}
+
+body{
+    background-color: #fef4f4;
+}
+
+h1{
+    width: 100%;
+    margin: 0;
+    background-color: #e9dfe5;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.fridges{
+    text-align: center;
+    padding: 15px 0;
+}
+
+ul{
+    width:180px;
+    background:#fff;
+    border:#ddd 5px solid;
+    border-radius:10px;
+    display: inline-block;
+    text-align: left;
+    padding: 10px;
+    padding-left: 20px; 
+    margin-bottom: 10px; 
+    list-style-position: inside;
+}
+
+li{
+    margin: 0;
+    padding: 0;
+}
+
+.delete {
+    border: 1px solid #0f0f0f;
+    border-radius: 5px;
+    width: auto;
+}
+
+.search {
+    background-color: #fbf9fc;
+    font-weight: bold;
+    border: 2px solid #d89ff3;
+    border-radius: 5px;
+}
+
+.footer {
+    padding: 15px 0;
+}
+

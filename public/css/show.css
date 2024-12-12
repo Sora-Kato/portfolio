@@ -1,0 +1,25 @@
+@charset "utf-8";
+
+* {
+    font-family: 'Noto Sans JP',sans-serif;
+}
+
+body{
+    background-color: #fef4f4;
+}
+
+h1{
+    width: 100%;
+    margin: 0;
+    background-color: #e9dfe5;
+    text-align: center;
+    padding: 10px 0;
+}
+
+h3{
+    font-weight: bold;
+    width: 100%;
+    margin: 0;
+    background-color: #e7e7eb;
+    padding: 10px 0;
+}

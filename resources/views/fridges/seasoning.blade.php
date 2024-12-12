@@ -4,7 +4,8 @@
         <meta charset="utf-8">
         <title>冷蔵庫活用アプリ</title>
         <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('css/seasoning.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Kosugi&display=swap" rel="stylesheet">
     </head>
     <body>
         <h1>調味料の管理</h1>
